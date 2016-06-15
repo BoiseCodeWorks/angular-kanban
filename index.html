@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="ngKanban">
 	<head>
 		<meta charset="utf-8">
 		<title>Angular Kanban</title>
@@ -8,7 +8,7 @@
 		<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Merienda' type='text/css'>
 		<link rel="stylesheet" href="site.css">
 	</head>
-	<body ng-app="ngKanban">
+	<body ng-controller="storyController as vm">
 		
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container">
@@ -25,7 +25,12 @@
 		</nav>
 		
 		<div class="container-responsive">
-			<story-board></story-board>
+			<ul ng-cloak>
+				<li ng-repeat="story in vm.stories">
+					<div>{{ story.name }}</div>
+					<div>{{ story.details }}</div>
+				</li>
+			</ul>
 		</div>
 		
 		<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
