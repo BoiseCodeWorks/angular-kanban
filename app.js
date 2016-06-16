@@ -2,7 +2,7 @@
 	
 	var app = angular.module('ngKanban', []);
 
-	app.controller('storyController', ['storageService', function (storageService) {
+	app.controller('storyController', ['storageService', 'guidService', function (storageService, guidService) {
 		
 		var vm = this;
 
@@ -14,12 +14,23 @@
 
 		vm.addStory = function () {
 
-			var newStory = angular.copy(vm.newStory);
+			guidService.getGuid().then(
+				function (response) {
+					
+					var newStory = angular.copy(vm.newStory);
 
-			vm.stories = storageService.addStory(newStory);
-			
-			vm.newStory.name = '';
-			vm.newStory.details = '';
+					newStory.id = response.data;
+
+					vm.stories = storageService.addStory(newStory);
+
+					vm.newStory.name = '';
+					vm.newStory.details = '';
+				}
+			).catch(
+				function (err) {
+					console.log('Something went wrong: ', err);
+				}
+			);	
 		};	
 		
 		storageService.getStories().then(
