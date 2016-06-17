@@ -28,6 +28,17 @@
 
 			return stories;
 		}
+
+		function deleteStory(story) {
+
+			stories = stories.filter(function (item) {
+				return item.id !== story.id;
+			});
+
+			saveToLocalStorage();
+
+			return stories;
+		}
 		
 		function getStories() {
 
@@ -47,7 +58,8 @@
 		return {
 			addStory: addStory,
 			getStories: getStories,
-			updateStory: updateStory
+			updateStory: updateStory,
+			deleteStory: deleteStory
 		};
 	}]);	
 })();
