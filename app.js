@@ -1,43 +1,68 @@
 (function () {
-	
-	var app = angular.module('ngKanban', []);
 
-	app.controller('storyController', ['storageService', 'guidService', function (storageService, guidService) {
-		
+	var app = angular.module('ngKanban', ['ui.bootstrap']);
+
+	app.controller('storyController', ['storageService', 'guidService', '$uibModal', function (storageService, guidService, $uibModal) {
+
 		var vm = this;
 
 		vm.stories = [];
-		vm.newStory = {
-			name: '',
-			details: ''
-		};
 
 		vm.addStory = function () {
 
-			guidService.getGuid().then(
-				function (response) {
-					
-					var newStory = angular.copy(vm.newStory);
+			var modalInstance = $uibModal.open({
+				templateUrl: 'addStoryModal.html',
+				controller: 'newStoryModalController',
+				controllerAs: 'vm'
+			});
 
-					newStory.id = response.data;
+			modalInstance.result.then(
+				function (newStory) {
 
-					vm.stories = storageService.addStory(newStory);
+					guidService.getGuid().then(
+						function (response) {
 
-					vm.newStory.name = '';
-					vm.newStory.details = '';
+							newStory.id = response.data;
+
+							vm.stories = storageService.addStory(newStory);
+						}
+					).catch(
+						function (err) {
+							console.log('Something went wrong: ', err);
+						}
+					);
+				},
+				function () {
+					// cancelled
 				}
-			).catch(
-				function (err) {
-					console.log('Something went wrong: ', err);
-				}
-			);	
-		};	
-		
+			);
+
+
+		};
+
 		storageService.getStories().then(
 			function (stories) {
 				vm.stories = stories;
 			}
 		);
 
-	}]);	
+	}]);
+
+	app.controller('newStoryModalController', ['$uibModalInstance', function ($uibModalInstance) {
+
+		var vm = this;
+
+		vm.newStory = {
+			name: '',
+			details: ''
+		};
+
+		vm.ok = function () {
+			$uibModalInstance.close(vm.newStory);
+		};
+
+		vm.cancel = function () {
+			$uibModalInstance.dismiss('cancel');
+		};
+	}]);
 })();
