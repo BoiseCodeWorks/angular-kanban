@@ -13,7 +13,12 @@
 			var modalInstance = $uibModal.open({
 				templateUrl: 'addStoryModal.html',
 				controller: 'newStoryModalController',
-				controllerAs: 'vm'
+				controllerAs: 'vm',
+				resolve: {
+					story: function () {
+						return null;
+					}
+				}
 			});
 
 			modalInstance.result.then(
@@ -36,9 +41,32 @@
 					// cancelled
 				}
 			);
-
-
 		};
+
+		vm.editStory = function (story) {
+			
+			var modalInstance = $uibModal.open({
+				templateUrl: 'addStoryModal.html',
+				controller: 'newStoryModalController',
+				controllerAs: 'vm',
+				resolve: {
+					story: function () {
+						return angular.copy(story);
+					}
+				}
+			});
+
+			modalInstance.result.then(
+				function (story) {
+
+					debugger					
+					//vm.stories = storageService.addStory(newStory);					
+				},
+				function () {
+					// cancelled
+				}
+			);
+		}
 
 		storageService.getStories().then(
 			function (stories) {
@@ -48,11 +76,11 @@
 
 	}]);
 
-	app.controller('newStoryModalController', ['$uibModalInstance', function ($uibModalInstance) {
+	app.controller('newStoryModalController', ['$uibModalInstance', 'story', function ($uibModalInstance, story) {
 
 		var vm = this;
 
-		vm.newStory = {
+		vm.newStory = story || {
 			name: '',
 			details: ''
 		};

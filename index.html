@@ -33,7 +33,7 @@
 	<div class="container-responsive">
 		<ul>
 			<li ng-repeat="story in vm.stories track by $index">
-				<div>{{ story.name }}</div>
+				<div><button type="button" class="btn btn-link" ng-click="vm.editStory(story)">{{ story.name }}</button></div>
 				<div>{{ story.details }}</div>
 			</li>
 		</ul>
