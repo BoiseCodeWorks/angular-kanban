@@ -57,10 +57,8 @@
 			});
 
 			modalInstance.result.then(
-				function (story) {
-
-					debugger					
-					//vm.stories = storageService.addStory(newStory);					
+				function (story) {					
+					vm.stories = storageService.updateStory(story);					
 				},
 				function () {
 					// cancelled

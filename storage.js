@@ -14,6 +14,20 @@
 
 			return stories; 
 		}	
+
+		function updateStory(story) {
+
+			var original = stories.find(function (item) {
+				return item.id === story.id;
+			})
+
+			original.name = story.name;
+			original.details = story.details;
+			
+			saveToLocalStorage();
+
+			return stories;
+		}
 		
 		function getStories() {
 
@@ -32,7 +46,8 @@
 
 		return {
 			addStory: addStory,
-			getStories: getStories
+			getStories: getStories,
+			updateStory: updateStory
 		};
 	}]);	
 })();
