@@ -1,11 +1,11 @@
 (function () {
-
+	
 	var app = angular.module('ngKanban');
 
 	app.component('storyBoard', {
 		templateUrl: 'templates/storyBoard.html',
 		controller: storyBoardController,
-		controllerAs: 'vm'
+		controllerAs: 'sb'
 	});
 
 	app.controller('listModalController', listModalController);
@@ -15,16 +15,16 @@
 	
 	function storyBoardController($uibModal, storageService, guidService) {
 
-		var vm = this;
+		var sb = this;
 		
-		vm.lists = [];
+		sb.lists = [];
 		
-		vm.addList = function () {
+		sb.addList = function () {
 
 			var modalInstance = $uibModal.open({
-				templateUrl: 'addListModal.html',
+				templateUrl: 'storyListModal.html',
 				controller: 'listModalController',
-				controllerAs: 'vm',
+				controllerAs: 'lm',
 				resolve: {
 					list: function () {
 						return null;
@@ -40,9 +40,7 @@
 
 							newList.id = response.data;
 
-							vm.lists.push(newList);	
-							console.log('lists: ', vm.lists);
-							//vm.lists = storageService.addList(newList);
+							sb.lists = storageService.addList(newList);
 						}
 					).catch(
 						function (err) {
@@ -59,19 +57,19 @@
 
 	function listModalController($uibModalInstance, list) {
 
-		var vm = this;
+		var lm = this;
 
-		vm.isEdit = list ? true : false;		
-		vm.list = list || {
+		lm.isEdit = list ? true : false;		
+		lm.list = list || {
 			name: '',
 			description: ''
 		};
 
-		vm.ok = function () {
-			$uibModalInstance.close(vm.list);
+		lm.ok = function () {
+			$uibModalInstance.close(lm.list);
 		};
 
-		vm.cancel = function () {
+		lm.cancel = function () {
 			$uibModalInstance.dismiss('cancel');
 		};
 
