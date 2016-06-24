@@ -19,6 +19,14 @@
 		
 		sb.lists = [];
 		
+		sb.$onInit = function () {
+			storageService.getLists().then(
+				function (lists) {
+					sb.lists = lists;
+				}
+			);
+		}
+
 		sb.addList = function () {
 
 			var modalInstance = $uibModal.open({
@@ -53,6 +61,35 @@
 				}
 			);
 		};
+
+		sb.editList = function (list) {
+			
+			var modalInstance = $uibModal.open({
+				templateUrl: 'storyListModal.html',
+				controller: 'listModalController',
+				controllerAs: 'lm',
+				resolve: {
+					list: function () {
+						return angular.copy(list);
+					}
+				}
+			});
+
+			modalInstance.result.then(
+				function (editedList) {
+
+					sb.lists = storageService.updateList(editedList);					
+				},
+				function () {
+					// cancelled
+				}
+			);
+		}	
+		
+		sb.deleteList = function (list) {
+			
+			sb.lists = storageService.deleteList(list);
+		}
 	}
 
 	function listModalController($uibModalInstance, list) {
