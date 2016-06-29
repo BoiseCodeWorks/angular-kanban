@@ -58,7 +58,11 @@
 			stories.push(story);
 			saveToLocalStorage();
 
-			return stories; 
+			var filtered = stories.filter(function (item) {
+				return item.listId === story.listId;
+			});
+
+			return filtered; 
 		}	
 
 		function updateStory(story) {
@@ -67,12 +71,16 @@
 				return item.id === story.id;
 			})
 
-			original.name = story.name;
-			original.details = story.details;
+			original.summary = story.summary;
+			original.detail = story.detail;
 			
 			saveToLocalStorage();
 
-			return stories;
+			var filtered = stories.filter(function (item) {
+				return item.listId === story.listId;
+			});
+
+			return filtered;
 		}
 
 		function deleteStory(story) {
@@ -83,16 +91,24 @@
 
 			saveToLocalStorage();
 
-			return stories;
+			var filtered = stories.filter(function (item) {
+				return item.listId === story.listId;
+			});
+
+			return filtered;
 		}
 		
-		function getStories() {
+		function getStories(listId) {
 
 			var deferred = $q.defer();
 
 			stories = JSON.parse(localStorage.getItem(STORY_STORAGE_ID) || '[]');
 			
-			deferred.resolve(stories);
+			var filtered = stories.filter(function (item) {
+				return item.listId === listId;
+			});
+
+			deferred.resolve(filtered);
 			
 			return deferred.promise;
 		}

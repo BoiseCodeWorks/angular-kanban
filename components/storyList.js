@@ -26,7 +26,7 @@
 		sl.cards = [];
 
 		sl.$onInit = function () {
-			storageService.getStories().then(
+			storageService.getStories(sl.list.id).then(
 				function (cards) {
 					sl.cards = cards;
 				}
@@ -61,6 +61,7 @@
 						function (response) {
 
 							newCard.id = response.data;
+							newCard.listId = sl.list.id;
 
 							sl.cards = storageService.addStory(newCard);
 						}
@@ -68,13 +69,41 @@
 						function (err) {
 							console.log('Something went wrong: ', err);
 						}
-					);
+						);
 				},
 				function () {
 					// cancelled
 				}
 			);
 		}
+		
+		sl.editCard = function (card) {
+			
+			var modalInstance = $uibModal.open({
+				templateUrl: 'storyCardModal.html',
+				controller: 'cardModalController',
+				controllerAs: 'cm',
+				resolve: {
+					card: function () {
+						return angular.copy(card);
+					}
+				}
+			});
+
+			modalInstance.result.then(
+				function (updatedCard) {
+
+					sl.cards = storageService.updateStory(updatedCard);
+				},
+				function () {
+					// cancelled
+				}
+			);
+		};
+
+		sl.deleteCard = function (card) {
+			sl.cards = storageService.deleteStory(card);
+		};
 	}
 
 	function cardModalController($uibModalInstance, card) {
@@ -82,7 +111,7 @@
 		var cm = this;
 
 		cm.isEdit = card ? true : false;		
-		cm.list = card || {
+		cm.card = card || {
 			summary: '',
 			detail: ''
 		};

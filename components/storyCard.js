@@ -18,6 +18,13 @@
 
 		var sc = this;
 	
+		sc.editCard = function () {
+			sc.list.editCard(sc.card);
+		}
+
+		sc.deleteCard = function () {
+			sc.list.deleteCard(sc.card);
+		}
 	}
 
 })();
