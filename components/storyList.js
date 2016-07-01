@@ -22,6 +22,8 @@
 	function storyListController($uibModal, storageService, guidService) {
 
 		var sl = this;
+
+		console.log('List: ', sl);
 		
 		sl.cards = [];
 
@@ -104,6 +106,10 @@
 		sl.deleteCard = function (card) {
 			sl.cards = storageService.deleteStory(card);
 		};
+
+		sl.canDrop = function (event) {
+			event.preventDefault();
+		}
 	}
 
 	function cardModalController($uibModalInstance, card) {
