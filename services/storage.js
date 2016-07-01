@@ -113,6 +113,18 @@
 			return deferred.promise;
 		}
 
+		function findStories(term) {
+
+			var found = stories.filter(function (item) {
+				
+				var data = item.summary.toLowerCase() + ' ' + item.detail.toLowerCase();
+
+				return data.includes(term.toLowerCase());
+			});	
+			
+			return found;
+		}
+
 		function saveToLocalStorage() {
 			localStorage.setItem(LIST_STORAGE_ID, JSON.stringify(lists));
 			localStorage.setItem(STORY_STORAGE_ID, JSON.stringify(stories));
@@ -126,7 +138,8 @@
 			addStory: addStory,
 			getStories: getStories,
 			updateStory: updateStory,
-			deleteStory: deleteStory
+			deleteStory: deleteStory,
+			findStories: findStories
 		};
 	}]);	
 })();

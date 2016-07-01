@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="site.css">
 </head>
 
-<body>
+<body ng-controller="appController as ac">
 
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -20,14 +20,32 @@
 			</a>
 			<form class="navbar-form navbar-right" role="search">
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Search">
+					<input ng-model="ac.searchTerm" type="text" class="form-control" placeholder="Search">
 				</div>
-				<button class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
+				<button ng-click="ac.search()" type="button" class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
 			</form>
 		</div>
 	</nav>
 
 	<story-board></story-board>
+
+	<script type="text/ng-template" id="searchResultsModal.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Search Results</h3>
+		</div>
+		<div class="modal-body">
+			<div class="media" ng-repeat="story in rm.results track by $index"> 
+				<div class="media-body"> 
+					<h4 class="media-heading">{{ story.summary }} </h4>
+					{{ story.detail }}
+				</div> 
+				<div class="media-right"></div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-danger" type="button" ng-click="rm.cancel()">Close</button>
+		</div>
+	</script>
 
 	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
