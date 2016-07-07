@@ -18,7 +18,9 @@
 				controllerAs: 'rm',
 				resolve: {
 					results: function () {
-						return results;
+						return results.map(function (item) {
+							return Object.assign({}, item);
+						});
 					},
 					term: function () {
 						return ac.searchTerm
