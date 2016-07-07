@@ -44,8 +44,8 @@
 		var rm = this;
 
 		results = results.map(function (item) {
-			item.summary = markTerms(item.summary, term);
-			item.detail = markTerms(item.detail, term);
+			item.summary = $sce.trustAsHtml(markTerms(item.summary, term));
+			item.detail = $sce.trustAsHtml(markTerms(item.detail, term));
 
 			return item;
 		});
