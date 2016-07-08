@@ -119,7 +119,6 @@
 			);			
 		};
 
-		//ac.marked = $sce.trustAsHtml(markTerms('Mr. Blue lives in a blue house and wears a blue suite and blue hat.', 'blue'));
 	}]);
 
 	app.controller('registerModalController', ['$uibModalInstance', 'mode', function ($uibModalInstance, mode) {
