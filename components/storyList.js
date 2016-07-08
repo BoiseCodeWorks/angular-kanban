@@ -16,15 +16,21 @@
 
 	app.controller('cardModalController', cardModalController);
 	
-	storyListController.$inject = ['$uibModal', 'storageService', 'guidService'];
+	storyListController.$inject = ['$scope', '$uibModal', 'storageService', 'guidService'];
 	cardModalController.$inject = ['$uibModalInstance', 'card'];
 	
-	function storyListController($uibModal, storageService, guidService) {
+	function storyListController($scope, $uibModal, storageService, guidService) {
 
 		var sl = this;
 
 		console.log('List: ', sl);
 		
+		$scope.$on('edit-story', function (event, data) {
+			if (data.listId === sl.list.id) {
+				sl.editCard(data);
+			}
+		});
+
 		sl.cards = [];
 
 		sl.$onInit = function () {

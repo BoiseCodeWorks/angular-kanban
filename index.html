@@ -36,7 +36,7 @@
 			<h3 class="modal-title">Search Results</h3>
 		</div>
 		<div class="modal-body">
-			<div class="media" ng-repeat="story in rm.results track by $index"> 
+			<div class="media" ng-repeat="story in rm.results track by $index" ng-click="rm.edit(story.id)"> 
 				<div class="media-body"> 
 					<h4 class="media-heading" ng-bind-html="story.summary"></h4>
 					<span ng-bind-html="story.detail"></span>
@@ -49,6 +49,18 @@
 		</div>
 	</script>
 
+	<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
+	<script>
+		// Initialize Firebase
+		// TODO: Replace with your project's customized code snippet
+		var config = {
+			apiKey: "AIzaSyDqnlBsn6yULRbFLKMPZEpGojh9qlf_0NU",
+			authDomain: "angularkanban.firebaseapp.com",
+			databaseURL: "https://angularkanban.firebaseio.com",
+			storageBucket: "angularkanban.appspot.com"
+		};
+		firebase.initializeApp(config);
+  	</script>
 	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
@@ -58,6 +70,7 @@
 	<script src="app.js"></script>
 	<script src="services/guid.js"></script>
 	<script src="services/storage.js"></script>
+	<script src="services/firebase.js"></script>
 	<script src="components/storyBoard.js"></script>
 	<script src="components/storyList.js"></script>
 	<script src="components/storyCard.js"></script>
