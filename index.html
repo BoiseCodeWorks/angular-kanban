@@ -18,14 +18,27 @@
 			<a class="navbar-brand">
 				<span class="logo"><i class="fa fa-trello"></i> Angular Kanban</span>
 			</a>
+			<button ng-show="ac.showRegister" ng-click="ac.register()" type="button" class="btn btn-link navbar-btn navbar-right" title="Register">Register</button>
+			<button ng-show="ac.showLogin" ng-click="ac.login()" type="button" class="btn btn-link navbar-btn navbar-right" title="Log In"><i class="fa fa-sign-in"></i> Log In</button>
+			<a ng-show="ac.showLogout" class="navbar-right avatar-navbar">
+				<img ng-src="{{ ac.user.photoURL }}" class="img-thumbnail avatar">
+			</a>
+			<ul class="nav navbar-nav navbar-right">
+				<li ng-show="ac.showLogout" class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{{ ac.user.displayName }} <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li>
+							<button type="button" ng-click="ac.logout()" class="btn btn-link" title="Log Out"><i class="fa fa-sign-out"></i> Log Out</button>
+						</li>
+					</ul>
+				</li>
+			</ul>
+						
 			<form class="navbar-form navbar-right" role="search">
 				<div class="form-group">
 					<input ng-model="ac.searchTerm" type="text" class="form-control" placeholder="Search">
 				</div>
 				<button ng-click="ac.search()" type="button" class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
-				<button ng-show="ac.showLogin" ng-click="ac.login()" type="button" class="btn btn-primary" title="Log In"><i class="fa fa-sign-in"></i> Log In</button>
-				<button ng-show="ac.showLogout" ng-click="ac.logout()" type="button" class="btn btn-primary" title="Log Out"><i class="fa fa-sign-out"></i> Log Out</button>
-				<button ng-show="ac.showRegister" ng-click="ac.register()" type="button" class="btn btn-link" title="Register">Register</button>
 			</form>
 		</div>
 	</nav>
