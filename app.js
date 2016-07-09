@@ -2,39 +2,33 @@
 
 	var app = angular.module('ngKanban', ['ui.bootstrap']);
 
-	app.value('auth', {});
-	
-	app.controller('appController', ['auth', '$rootScope', '$scope', 'storageService', 'firebaseService', '$uibModal', function (auth, $rootScope, $scope, storageService, firebaseService, $uibModal) {
+	app.controller('appController', ['$rootScope', '$scope', '$timeout', 'storageService', 'firebaseService', '$uibModal', function ($rootScope, $scope, $timeout, storageService, firebaseService, $uibModal) {
 		
 		var ac = this;
 
-		ac.showRegister = true;
-		ac.showLogin = true;
-		ac.showLogout = false;
-		
-		ac.auth = {
-			user: auth.user
-		};
-
+		ac.user = null;
+		ac.showRegister = ac.user == null;
+		ac.showLogin = ac.user == null;
+		ac.showLogout = ac.user != null;
 		ac.searchTerm = '';
 
 		firebase.auth().onAuthStateChanged(function (user) {
 
-			if (user) {
-				ac.auth.user = user;
-				ac.showLogin = false;
-				ac.showRegister = false;
-				ac.showLogout = true;
-			}	
-			else {
-				ac.auth.user = null;
-				ac.showLogin = true;
-				ac.showRegister = true;
-				ac.showLogout = false;
-			}
-
-			$scope.$apply();
+			$timeout(function () {
+				$scope.$apply(function () {
+					ac.setUser(user);
+				});
+			}, 100);			
+			
 		});
+
+		ac.setUser = function (user) {
+			
+			ac.user = user;
+			ac.showRegister = ac.user == null;
+			ac.showLogin = ac.user == null;
+			ac.showLogout = ac.user != null;
+		}
 
 		ac.register = function () {
 			
