@@ -8,8 +8,19 @@
 
 			firebase.auth()
 				.createUserWithEmailAndPassword(user.email, user.password)
-				.catch(function (error) {
+				.then(function (newUser) {
 
+					newUser.updateProfile({
+  						displayName: user.name,
+  						photoURL: 'https://api.adorable.io/avatars/100/' + user.email + '.png'
+					})
+					.catch(function (error) {
+						// TODO: broadcast error message
+						console.log(error);
+					});
+				})
+				.catch(function (error) {
+					// TODO: broadcast error message
 					console.log(error);
 				}
 			);
