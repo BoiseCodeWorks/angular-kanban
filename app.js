@@ -22,6 +22,15 @@
 			
 		});
 
+		$scope.$on('profile-updated', function (event, user) {
+			$timeout(function () {
+				$scope.$apply(function () {
+					ac.setUser(user);
+				});
+			}, 100);			
+		});
+
+
 		ac.setUser = function (user) {
 			
 			ac.user = user;
