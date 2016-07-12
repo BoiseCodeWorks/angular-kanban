@@ -2,7 +2,9 @@
 
 	var app = angular.module('ngKanban', ['ui.bootstrap']);
 
-	app.controller('appController', ['$rootScope', '$scope', '$timeout', 'storageService', 'firebaseService', '$uibModal', function ($rootScope, $scope, $timeout, storageService, firebaseService, $uibModal) {
+	app.controller('appController', [
+		'$rootScope', '$scope', '$timeout', 'storageService', 'firebaseService', 'notificationService', '$uibModal',
+		function ($rootScope, $scope, $timeout, storageService, firebaseService, notificationService, $uibModal) {
 		
 		var ac = this;
 
