@@ -13,7 +13,6 @@
 
 <body ng-controller="appController as ac">
 
-
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<a class="navbar-brand">
@@ -45,6 +44,8 @@
 	</nav>
 
 	<story-board></story-board>
+
+	<user-list></user-list>
 
 	<script type="text/ng-template" id="registerModal.html">
 		<div class="modal-header">
@@ -121,6 +122,7 @@
 	<script src="services/storage.js"></script>
 	<script src="services/firebase.js"></script>
 	<script src="services/notification.js"></script>
+	<script src="components/userList.js"></script>
 	<script src="components/storyBoard.js"></script>
 	<script src="components/storyList.js"></script>
 	<script src="components/storyCard.js"></script>
