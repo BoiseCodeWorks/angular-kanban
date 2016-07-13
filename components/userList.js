@@ -8,14 +8,18 @@
 		controllerAs: 'ul'
 	});
 
-	userListController.$inject = ['$scope', 'firebaseService'];
+	userListController.$inject = ['$scope', '$timeout', 'firebaseService'];
 
-	function userListController($scope, firebaseService) {
+	function userListController($scope, $timeout, firebaseService) {
 
 		var ul = this;
 
-		$scope.$on('userlist-updated', function (event, data) {
-			updateList();
+		$scope.$on('userlist-updated', function (event, users) {
+			$timeout(function () {
+				$scope.$apply(function () {
+					ul.users = users;
+				});
+			}, 100);			
 		});
 
 		ul.$onInit = function () {

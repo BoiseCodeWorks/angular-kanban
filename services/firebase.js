@@ -4,6 +4,17 @@
 
 	app.factory('firebaseService', ['$rootScope', '$q', 'notificationService', function ($rootScope, $q, notificationService) {
 
+		firebase.database().ref('users/').on('value', function (snapshot) {
+
+			var users = [];
+			
+			snapshot.forEach(function(childSnapshot) {
+				users.push(childSnapshot.val());
+			});
+
+			$rootScope.$broadcast('userlist-updated', users);
+		});
+
 		function createAccount(user) {
 
 			firebase.auth()

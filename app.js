@@ -32,7 +32,6 @@
 			}, 100);			
 		});
 
-
 		ac.setUser = function (user) {
 			
 			ac.user = user;
