@@ -39,6 +39,29 @@ body {
 .avatar {
   height: 30px;
   padding: 1px;
+  cursor: pointer;
+}
+
+.avatar:hover{
+  height: 40px;
+  border: 2px solid red;
+}
+
+.avatar-chat{
+  height: 75px; 
+}
+
+textarea{
+    resize: none;
+}
+
+.chat-box{
+  border: solid 1px #808080;
+  min-height: 150px;
+  max-height: 225px;
+  overflow: scroll;
+  margin-bottom: 15px;
+  border-radius: 5px;
 }
 
 .storyBoard {

@@ -89,7 +89,7 @@
 			firebase.database().ref('users/' + user.uid).set({
 				id: user.uid,
 				name: user.displayName,
-				photoUrl: user.photoURL,
+				photoURL: user.photoURL,
 				lastLogin: new Date().getTime()
 			}).then(function () {
 				$rootScope.$broadcast('userlist-updated');
