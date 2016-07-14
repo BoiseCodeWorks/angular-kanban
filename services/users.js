@@ -2,18 +2,7 @@
 
 	var app = angular.module('ngKanban');
 
-	app.factory('firebaseService', ['$rootScope', '$q', 'notificationService', function ($rootScope, $q, notificationService) {
-
-		firebase.database().ref('users/').on('value', function (snapshot) {
-
-			var users = [];
-			
-			snapshot.forEach(function(childSnapshot) {
-				users.push(childSnapshot.val());
-			});
-
-			$rootScope.$broadcast('userlist-updated', users);
-		});
+	app.factory('usersService', ['$rootScope', '$q', 'notificationService', function ($rootScope, $q, notificationService) {
 
 		function createAccount(user) {
 
@@ -63,26 +52,18 @@
       		} 
 		}
 
-		function getOnlineUsers() {
+		function subscribeToOnlineUsers() {
 
-			var users = [];			
-			var deferred = $q.defer();
-			
 			firebase.database().ref('users/').on('value', function (snapshot) {
 
+				var users = [];
+				
 				snapshot.forEach(function(childSnapshot) {
-      				users.push(childSnapshot.val());
+					users.push(childSnapshot.val());
 				});
 
-				deferred.resolve(users);
+				$rootScope.$broadcast('userlist-updated', users);
 			});
-
-			return deferred.promise;
-		}
-
-		function addList(list) {
-
-			firebase.database().ref('lists/' + list.id).set(list);
 		}
 
 		function addOnlineUser(user) {
@@ -109,8 +90,7 @@
 			createAccount: createAccount,
 			authorizeAccount: authorizeAccount,
 			exitAccount: exitAccount,
-			getOnlineUsers: getOnlineUsers,
-			addList: addList
+			subscribeToOnlineUsers: subscribeToOnlineUsers
 		};
 	}]);
 })();

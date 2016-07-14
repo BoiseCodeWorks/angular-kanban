@@ -5,8 +5,8 @@
 	app.value('globals', {});
 	
 	app.controller('appController', [
-		'globals', '$rootScope', '$scope', '$timeout', 'storageService', 'firebaseService', 'notificationService', '$uibModal',
-		function (globals, $rootScope, $scope, $timeout, storageService, firebaseService, notificationService, $uibModal) {
+		'globals', '$rootScope', '$scope', '$timeout', 'storageService', 'usersService', 'notificationService', '$uibModal',
+		function (globals, $rootScope, $scope, $timeout, storageService, usersService, notificationService, $uibModal) {
 		
 		var ac = this;
 
@@ -61,7 +61,7 @@
 
 			modalInstance.result.then(
 				function (newUser) {
-					firebaseService.createAccount(newUser);
+					usersService.createAccount(newUser);
 				},
 				function () {
 					// cancelled
@@ -84,7 +84,7 @@
 
 			modalInstance.result.then(
 				function (user) {
-					firebaseService.authorizeAccount(user);
+					usersService.authorizeAccount(user);
 				},
 				function () {
 					// cancelled
@@ -94,7 +94,7 @@
 		
 		ac.logout = function () {
 			
-			firebaseService.exitAccount();
+			usersService.exitAccount();
 		};
 		
 		ac.search = function () {

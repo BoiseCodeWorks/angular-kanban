@@ -8,24 +8,35 @@
 		controllerAs: 'ul'
 	});
 
-	userListController.$inject = ['globals', '$scope', '$timeout', 'firebaseService', 'chatService', '$uibModal'];
+	userListController.$inject = ['globals', '$scope', '$timeout', 'usersService', 'chatService', '$uibModal'];
 
-	function userListController(globals, $scope, $timeout, firebaseService, chatService, $uibModal) {
+	function userListController(globals, $scope, $timeout, usersService, chatService, $uibModal) {
 
 		var ul = this;
 
-		$scope.$on('user-updated', function (event) {
-
-			subscribeToChats();
-			subscribeToUsers();
-		});
+		ul.users = [];
 
 		ul.$onInit = function () {
 
 			if (globals.user) {
 				subscribeToChats();
 				subscribeToUsers();
-			}	
+			}
+			else {
+				ul.users = [];
+			}
+
+			$scope.$on('user-updated', function (event) {
+
+				if (globals.user) {
+					subscribeToChats();
+					subscribeToUsers();
+				}
+				else {
+					ul.users = [];
+				}
+			});
+
 		}
 
 		ul.userChat = function (user) {
@@ -54,7 +65,7 @@
 		}
 
 		function subscribeToChats() {
-			
+
 			$scope.$on('chat-conversations-updated', function (event, conversations) {
 
 				conversations.forEach(function (item) {
@@ -67,15 +78,23 @@
 			});
 
 			chatService.subscribeToConversations(globals.user.uid);
-		}	
-		
+		}
+
 		function subscribeToUsers() {
 
 			$scope.$on('userlist-updated', function (event, users) {
-				ul.users = users.filter(function (item) {
+				users = users.filter(function (item) {
 					return item.id !== globals.user.uid;
 				});
-			})		
+
+				$timeout(function () {
+					$scope.$apply(function () {
+						ul.users = users;
+					});
+				}, 100);
+			});
+
+			usersService.subscribeToOnlineUsers();
 		}
 	}
 
