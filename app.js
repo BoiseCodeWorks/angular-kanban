@@ -42,6 +42,8 @@
 			ac.showRegister = ac.user == null;
 			ac.showLogin = ac.user == null;
 			ac.showLogout = ac.user != null;
+
+			$rootScope.$broadcast('user-updated');
 		}
 
 		ac.register = function () {
