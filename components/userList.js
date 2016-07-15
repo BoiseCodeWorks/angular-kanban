@@ -83,9 +83,12 @@
 		function subscribeToUsers() {
 
 			$scope.$on('userlist-updated', function (event, users) {
-				users = users.filter(function (item) {
-					return item.id !== globals.user.uid;
-				});
+
+				if (users && users.length) {
+					users = users.filter(function (item) {
+						return item.id !== globals.user.uid;
+					});
+				}
 
 				$timeout(function () {
 					$scope.$apply(function () {

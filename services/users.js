@@ -10,15 +10,18 @@
 				.createUserWithEmailAndPassword(user.email, user.password)
 				.then(function (newUser) {
 
-					newUser.updateProfile({
+					var profile = {
 						displayName: user.name,
-						photoURL: 'https://api.adorable.io/avatars/100/' + user.email + '.png'
-					})
+						photoURL: 'https://robohash.org/' + newUser.uid + '.png?set=set2'
+						//photoURL: 'https://api.adorable.io/avatars/100/' + user.email + '.png'
+					};
+					
+					newUser.updateProfile(profile)
 						.then(
-						function () {
-							$rootScope.$broadcast('profile-updated', newUser);
-							$rootScope.$broadcast('userlist-updated');
-						}
+							function () {
+								$rootScope.$broadcast('profile-updated', newUser);
+								$rootScope.$broadcast('userlist-updated');
+							}
 						)
 						.catch(function (error) {
 							// TODO: broadcast error message
