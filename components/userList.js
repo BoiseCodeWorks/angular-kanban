@@ -105,7 +105,7 @@
 		}
 	}
 
-	app.controller('userChatController', ['$scope', 'globals', '$uibModalInstance', 'chatService', 'user', 'messages', function ($scope, globals, $uibModalInstance, chatService, user, messages) {
+	app.controller('userChatController', ['$scope', '$timeout', 'globals', '$uibModalInstance', 'chatService', 'user', 'messages', function ($scope, $timeout, globals, $uibModalInstance, chatService, user, messages) {
 
 		var uc = this;
 		uc.members = [];
@@ -121,18 +121,37 @@
 		$scope.$on('chat-messages-updated', function (event, messages) {
 
 			if (messages.conversationId === conversationId) {
-				uc.messages = messages.messages.sort(function (a, b) {
+				
+				var sorted = messages.messages.sort(function (a, b) {
 					return a.timestamp > b.timestamp;
 				});
+
+				$timeout(function () {
+					$scope.$apply(function () {
+						uc.messages = sorted;
+					});
+				}, 100);
 			}
+		});
+
+		$scope.$watch('uc.messages', function (newValue, oldValue) {
+
+			$timeout(function () {
+
+				var listItems = $('li.media');
+				var last = listItems.length - 1;
+
+				listItems[last].scrollIntoView();
+
+			}, 500);
 		});
 
 
 		uc.postMessage = function () {
 			chatService.postMessage(conversationId, globals.user.uid, user.id, angular.copy(uc.message));
 			uc.message = '';
-		}	
-		
+		}
+
 		uc.close = function () {
 			$uibModalInstance.dismiss('cancel');
 		}
