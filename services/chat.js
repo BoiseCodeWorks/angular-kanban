@@ -73,13 +73,14 @@
 
 		function postMessage(conversationId, myUserId, otherUserId, text) {
 			
-			// this is riskym could result in duplicates
-			var messageId = myUserId + '-' + new Date().getTime();
+			var timeStamp = new Date().getTime();
+			var messageId = myUserId + '-' + timeStamp;
 
 			firebase.database().ref('/chat/conversations/' + myUserId + '/' + conversationId).set(true);
 			firebase.database().ref('/chat/conversations/' + otherUserId + '/' + conversationId).set(true);
 
 			firebase.database().ref('/chat/messages/' + conversationId + '/' + messageId).set({
+				timestamp: timeStamp.toString(),
 				uid: myUserId,
 				text: text
 			});

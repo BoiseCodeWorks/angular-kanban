@@ -15,6 +15,7 @@
 		var ul = this;
 
 		ul.users = [];
+		ul.messages = {};
 
 		ul.$onInit = function () {
 
@@ -46,11 +47,12 @@
 				controller: 'userChatController',
 				controllerAs: 'uc',
 				resolve: {
-
 					user: function () {
 						return user;
+					},
+					messages: function () {
+						return ul.messages
 					}
-
 				}
 			});
 
@@ -74,7 +76,9 @@
 			});
 
 			$scope.$on('chat-messages-updated', function (event, messages) {
-				console.log('Messages: ', messages);
+				ul.messages[messages.conversationId] = messages.messages;
+
+				console.log(ul.messages);
 			});
 
 			chatService.subscribeToConversations(globals.user.uid);
@@ -101,18 +105,34 @@
 		}
 	}
 
-	app.controller('userChatController', ['globals', '$uibModalInstance', 'chatService', 'user', function (globals, $uibModalInstance, chatService, user) {
+	app.controller('userChatController', ['$scope', 'globals', '$uibModalInstance', 'chatService', 'user', 'messages', function ($scope, globals, $uibModalInstance, chatService, user, messages) {
 
 		var uc = this;
 		uc.members = [];
+		uc.message = ''
 
 		uc.members.push(globals.user);
 		uc.members.push(user);
 
 		var conversationId = globals.user.uid > user.id ? globals.user.uid + '-' + user.id : user.id + '-' + globals.user.uid;
 
-		chatService.postMessage(conversationId, globals.user.uid, user.id, 'Yo dude!, Whats up?');
+		uc.messages = messages[conversationId];
 
+		$scope.$on('chat-messages-updated', function (event, messages) {
+
+			if (messages.conversationId === conversationId) {
+				uc.messages = messages.messages.sort(function (a, b) {
+					return a.timestamp > b.timestamp;
+				});
+			}
+		});
+
+
+		uc.postMessage = function () {
+			chatService.postMessage(conversationId, globals.user.uid, user.id, angular.copy(uc.message));
+			uc.message = '';
+		}	
+		
 		uc.close = function () {
 			$uibModalInstance.dismiss('cancel');
 		}
