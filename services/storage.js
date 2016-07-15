@@ -48,18 +48,7 @@
 
 			var data = localStorage.getItem(LIST_STORAGE_ID);
 
-			try {
-				lists = JSON.parse(data);
-			}
-			catch (err) {
-				console.log('Error: ', err);
-				lists = [];
-			}
-			finally {
-				if (lists.length < 1) {
-					localStorage.setItem(LIST_STORAGE_ID, '[]');
-				}
-			}
+			lists = JSON.parse(localStorage.getItem(LIST_STORAGE_ID) || '[]');
 
 			deferred.resolve(lists);
 			
