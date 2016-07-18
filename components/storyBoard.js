@@ -20,11 +20,7 @@
 		sb.lists = [];
 		
 		sb.$onInit = function () {
-			storageService.getLists().then(
-				function (lists) {
-					sb.lists = lists;
-				}
-			);
+			sb.lists = storageService.getLists();
 		}
 
 		sb.addList = function () {

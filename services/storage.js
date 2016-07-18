@@ -44,15 +44,9 @@
 		
 		function getLists() {
 
-			var deferred = $q.defer();
-
-			var data = localStorage.getItem(LIST_STORAGE_ID);
-
 			lists = JSON.parse(localStorage.getItem(LIST_STORAGE_ID) || '[]');
-
-			deferred.resolve(lists);
 			
-			return deferred.promise;
+			return lists;
 		}
 
 		function addStory(story) {
