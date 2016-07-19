@@ -43,6 +43,10 @@
 			ac.showLogin = ac.user == null;
 			ac.showLogout = ac.user != null;
 
+			if (user) {
+				storageService.subscribeToListUpdates();
+			}
+
 			$rootScope.$broadcast('user-updated');
 		}
 

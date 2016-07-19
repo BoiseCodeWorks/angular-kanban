@@ -10,18 +10,28 @@
 
 	app.controller('listModalController', listModalController);
 
-	storyBoardController.$inject = ['$uibModal', 'storageService', 'guidService'];
+	storyBoardController.$inject = ['$uibModal', 'storageService', 'guidService','$scope','$timeout'];
 	listModalController.$inject = ['$uibModalInstance', 'list'];
 	
-	function storyBoardController($uibModal, storageService, guidService) {
+	function storyBoardController($uibModal, storageService, guidService, $scope, $timeout) {
 
 		var sb = this;
 		
 		sb.lists = [];
-		
-		sb.$onInit = function () {
-			sb.lists = storageService.getLists();
-		}
+
+		$scope.$on('lists-updated', function (event, lists) {
+
+			lists.forEach(function (item) {
+				storageService.subscribeToStoriesUpdates(item.id);
+			});
+
+			$timeout(function () {
+				$scope.$apply(function () {
+					sb.lists = lists;
+				});
+			}, 100);
+			
+		});
 
 		sb.addList = function () {
 
@@ -44,7 +54,9 @@
 
 							newList.id = response.data;
 
-							sb.lists = storageService.addList(newList);
+							//sb.lists = storageService.addList(newList);
+
+							storageService.saveList(newList);
 
 						}
 					).catch(
@@ -75,7 +87,7 @@
 			modalInstance.result.then(
 				function (editedList) {
 
-					sb.lists = storageService.updateList(editedList);					
+					sb.lists = storageService.saveList(editedList);					
 				},
 				function () {
 					// cancelled
