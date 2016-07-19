@@ -19,6 +19,8 @@
 					newUser.updateProfile(profile)
 						.then(
 							function () {
+								subscribeToOnlineUsers();
+								addOnlineUser(newUser);
 								$rootScope.$broadcast('profile-updated', newUser);
 								$rootScope.$broadcast('userlist-updated');
 							}
