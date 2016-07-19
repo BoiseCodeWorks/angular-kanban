@@ -25,7 +25,7 @@
 			});
 		}	
 
-		function subscribeToStoriesUpdates(listId) {
+		function subscribeToStoriesUpdates() {
 
 			firebase.database().ref('/stories').on('value', function (snapshot) {
 			
@@ -33,18 +33,11 @@
 
 				snapshot.forEach(function (childSnapshot) {
 					
-					var story = childSnapshot.val();
-
-					if (story.listId === listId) {
-						stories.push(story);
-					}
+					stories.push(childSnapshot.val());
 
 				});
 		
-				$rootScope.$broadcast('stories-updated', {
-					listId: listId,
-					stories: stories
-				});
+				$rootScope.$broadcast('stories-updated', stories);
 			});
 		}	
 
@@ -73,19 +66,26 @@
 
 		function findStories(term) {
 
-			var found = stories.filter(function (item) {
+			var deferred = $q.defer();
+			
+			firebase.database().ref('/stories').once('value', function (snapshot) {
 				
-				var data = item.summary.toLowerCase() + ' ' + item.detail.toLowerCase();
+				var stories = [];
 
-				return data.includes(term.toLowerCase());
+				snapshot.forEach(function (childSnapshot) {
+					
+					var story = childSnapshot.val();
+					var data = story.summary.toLowerCase() + ' ' + story.detail.toLowerCase();
+
+					if (data.includes(term.toLowerCase())) {
+						stories.push(story);
+					}
+				});
+
+				deferred.resolve(stories);
 			});	
 			
-			return found;
-		}
-
-		function saveToLocalStorage() {
-			localStorage.setItem(LIST_STORAGE_ID, JSON.stringify(lists));
-			localStorage.setItem(STORY_STORAGE_ID, JSON.stringify(stories));
+			return deferred.promise;
 		}
 
 		return {

@@ -24,19 +24,16 @@
 		var sl = this;
 		sl.cards = [];
 
-		console.log('List: ', sl);
-
-		$scope.$on('stories-updated', function (event, data) {
+		$scope.$on('stories-updated', function (event, stories) {
 			
-			if (data.listId === sl.list.id) {
-				
-				$timeout(function () {
-					$scope.$apply(function () {
-						sl.cards = data.stories;
+			$timeout(function () {
+				$scope.$apply(function () {
+					sl.cards = stories.filter(function (item) {
+						return item.listId === sl.list.id;
 					});
-				}, 100);
+				});
+			}, 100);
 
-			}
 		});
 		
 		$scope.$on('edit-story', function (event, data) {
@@ -45,6 +42,10 @@
 			}
 		});
 
+		sl.$onInit = function () {
+			storageService.subscribeToStoriesUpdates();
+		};
+		
 		sl.editList = function () {
 			sl.board.editList(sl.list);
 		}

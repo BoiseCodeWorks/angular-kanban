@@ -3,140 +3,144 @@
 	var app = angular.module('ngKanban', ['ui.bootstrap']);
 
 	app.value('globals', {});
-	
+
 	app.controller('appController', [
 		'globals', '$rootScope', '$scope', '$timeout', 'storageService', 'usersService', 'notificationService', '$uibModal',
 		function (globals, $rootScope, $scope, $timeout, storageService, usersService, notificationService, $uibModal) {
-		
-		var ac = this;
 
-		ac.user = null;
-		ac.showRegister = ac.user == null;
-		ac.showLogin = ac.user == null;
-		ac.showLogout = ac.user != null;
-		ac.searchTerm = '';
+			var ac = this;
 
-		firebase.auth().onAuthStateChanged(function (user) {
-
-			$timeout(function () {
-				$scope.$apply(function () {
-					ac.setUser(user);
-				});
-			}, 100);			
-			
-		});
-
-		$scope.$on('profile-updated', function (event, user) {
-			$timeout(function () {
-				$scope.$apply(function () {
-					ac.setUser(user);
-				});
-			}, 100);			
-		});
-
-		ac.setUser = function (user) {
-			
-			globals.user = user;
-			
-			ac.user = user;
+			ac.user = null;
 			ac.showRegister = ac.user == null;
 			ac.showLogin = ac.user == null;
 			ac.showLogout = ac.user != null;
+			ac.searchTerm = '';
 
-			if (user) {
-				storageService.subscribeToListUpdates();
+			firebase.auth().onAuthStateChanged(function (user) {
+
+				$timeout(function () {
+					$scope.$apply(function () {
+						ac.setUser(user);
+					});
+				}, 100);
+
+			});
+
+			$scope.$on('profile-updated', function (event, user) {
+				$timeout(function () {
+					$scope.$apply(function () {
+						ac.setUser(user);
+					});
+				}, 100);
+			});
+
+			ac.setUser = function (user) {
+
+				globals.user = user;
+
+				ac.user = user;
+				ac.showRegister = ac.user == null;
+				ac.showLogin = ac.user == null;
+				ac.showLogout = ac.user != null;
+
+				if (user) {
+					storageService.subscribeToListUpdates();
+				}
+
+				$rootScope.$broadcast('user-updated');
 			}
 
-			$rootScope.$broadcast('user-updated');
-		}
+			ac.register = function () {
 
-		ac.register = function () {
-			
-			var modalInstance = $uibModal.open({
-				templateUrl: 'registerModal.html',
-				controller: 'registerModalController',
-				controllerAs: 'rm',
-				resolve: {
-					mode: function () {
-						return 'register';
+				var modalInstance = $uibModal.open({
+					templateUrl: 'registerModal.html',
+					controller: 'registerModalController',
+					controllerAs: 'rm',
+					resolve: {
+						mode: function () {
+							return 'register';
+						}
 					}
-				}
-			});
+				});
 
-			modalInstance.result.then(
-				function (newUser) {
-					usersService.createAccount(newUser);
-				},
-				function () {
-					// cancelled
-				}
-			);			
-		};
-
-		ac.login = function () {
-			
-			var modalInstance = $uibModal.open({
-				templateUrl: 'registerModal.html',
-				controller: 'registerModalController',
-				controllerAs: 'rm',
-				resolve: {
-					mode: function () {
-						return 'login';
-					}
-				}
-			});
-
-			modalInstance.result.then(
-				function (user) {
-					usersService.authorizeAccount(user);
-				},
-				function () {
-					// cancelled
-				}
-			);			
-		};
-		
-		ac.logout = function () {
-			
-			usersService.exitAccount();
-		};
-		
-		ac.search = function () {
-
-			var results = storageService.findStories(ac.searchTerm);
-			
-			var modalInstance = $uibModal.open({
-				templateUrl: 'searchResultsModal.html',
-				controller: 'searchResultsController',
-				controllerAs: 'rm',
-				resolve: {
-					results: function () {
-						return results.map(function (item) {
-							return Object.assign({}, item);
-						});
+				modalInstance.result.then(
+					function (newUser) {
+						usersService.createAccount(newUser);
 					},
-					term: function () {
-						return ac.searchTerm
+					function () {
+						// cancelled
 					}
-				}
-			});
+				);
+			};
 
-			modalInstance.result.then(
-				function (story) {
-					$rootScope.$broadcast('edit-story', story);
-				},
-				function () {
-					// cancelled
-				}
-			);			
-		};
+			ac.login = function () {
+
+				var modalInstance = $uibModal.open({
+					templateUrl: 'registerModal.html',
+					controller: 'registerModalController',
+					controllerAs: 'rm',
+					resolve: {
+						mode: function () {
+							return 'login';
+						}
+					}
+				});
+
+				modalInstance.result.then(
+					function (user) {
+						usersService.authorizeAccount(user);
+					},
+					function () {
+						// cancelled
+					}
+				);
+			};
+
+			ac.logout = function () {
+
+				usersService.exitAccount();
+			};
+
+			ac.search = function () {
+
+				storageService.findStories(ac.searchTerm).then(
+					function (results) {
+
+						var modalInstance = $uibModal.open({
+							templateUrl: 'searchResultsModal.html',
+							controller: 'searchResultsController',
+							controllerAs: 'rm',
+							resolve: {
+								results: function () {
+									return results.map(function (item) {
+										return Object.assign({}, item);
+									});
+								},
+								term: function () {
+									return ac.searchTerm
+								}
+							}
+						});
+
+						modalInstance.result.then(
+							function (story) {
+								$rootScope.$broadcast('edit-story', story);
+							},
+							function () {
+								// cancelled
+							}
+						);
+
+					}
+				);
+			};
 
 		}]);
 
 	app.controller('registerModalController', ['$uibModalInstance', 'mode', function ($uibModalInstance, mode) {
-		
+
 		var rm = this;
-		
+
 		rm.errors = [];
 		rm.mode = mode;
 
@@ -146,11 +150,11 @@
 			email: '',
 			password: ''
 		};
-		
+
 		rm.register = function () {
 
 			rm.errors = [];
-			
+
 			if (rm.user.name === '') {
 				rm.errors.push('A name is required.');
 			}
@@ -158,13 +162,13 @@
 			if (rm.user.email === '') {
 				rm.errors.push('An email address is required.');
 			}
-			
+
 			if (rm.user.password === '') {
 				rm.errors.push('A password is required.');
 			}
-			
+
 			if (rm.errors.length < 1) {
-				$uibModalInstance.close(rm.user);				
+				$uibModalInstance.close(rm.user);
 			}
 		};
 
@@ -175,25 +179,25 @@
 			if (rm.user.email === '') {
 				rm.errors.push('An email address is required.');
 			}
-			
+
 			if (rm.user.password === '') {
 				rm.errors.push('A password is required.');
 			}
-			
+
 			if (rm.errors.length < 1) {
-				$uibModalInstance.close(rm.user);				
+				$uibModalInstance.close(rm.user);
 			}
 		}
-		
+
 		rm.cancel = function () {
 			$uibModalInstance.dismiss('cancel');
 		};
 	}]);
-	
+
 	app.controller('searchResultsController', ['$sce', '$uibModalInstance', 'results', 'term', function ($sce, $uibModalInstance, results, term) {
-		
+
 		var rm = this;
-		
+
 		rm.results = results.map(function (item) {
 
 			var resultItem = angular.copy(item);
@@ -205,14 +209,14 @@
 		});
 
 		rm.edit = function (storyId) {
-			
+
 			var story = results.find(function (item) {
 				return item.id === storyId;
 			});
 
 			$uibModalInstance.close(story);
 		};
-		
+
 		rm.cancel = function () {
 			$uibModalInstance.dismiss('cancel');
 		};
@@ -220,7 +224,7 @@
 		function markTerms(text, term) {
 
 			var result = [];
-			var buffer = [];		
+			var buffer = [];
 			var queue = text.split('');
 
 			term = term.toLowerCase();
@@ -230,7 +234,7 @@
 				buffer.push(queue.shift());
 
 				if (buffer.length === term.length) {
-					
+
 					var word = buffer.join('');
 
 					if (word.toLowerCase() === term) {
@@ -242,7 +246,7 @@
 					}
 				}
 			}
-			
+
 			return result.join('') + buffer.join('');
 		}
 
