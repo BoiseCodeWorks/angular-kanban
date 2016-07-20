@@ -55,9 +55,8 @@
 						function (response) {
 
 							newList.id = response.data;
-
-							//sb.lists = storageService.addList(newList);
-
+							newList.order = sb.lists[sb.lists.length - 1].order + 1;
+							
 							storageService.saveList(newList);
 
 						}
