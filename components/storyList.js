@@ -78,6 +78,9 @@
 				resolve: {
 					card: function () {
 						return null;
+					},
+					lists: function () {
+						return null;
 					}
 				}
 			});
