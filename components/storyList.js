@@ -1,5 +1,5 @@
 (function () {
-	
+
 	var app = angular.module('ngKanban');
 
 	app.component('storyList', {
@@ -7,8 +7,7 @@
 		controller: storyListController,
 		controllerAs: 'sl',
 		bindings: {
-			list: '<',
-			lists: '<'
+			list: '<'
 		},
 		require: {
 			board: '^storyBoard'
@@ -16,7 +15,7 @@
 	});
 
 	app.controller('cardModalController', cardModalController);
-	
+
 	storyListController.$inject = ['$scope', '$uibModal', 'storageService', 'guidService', '$timeout'];
 	cardModalController.$inject = ['$uibModalInstance', 'card', 'lists'];
 
@@ -26,7 +25,7 @@
 		sl.cards = [];
 
 		$scope.$on('stories-updated', function (event, stories) {
-			
+
 			$timeout(function () {
 				$scope.$apply(function () {
 					sl.cards = stories.filter(function (item) {
@@ -36,7 +35,7 @@
 			}, 100);
 
 		});
-		
+
 		$scope.$on('edit-story', function (event, data) {
 			if (data.listId === sl.list.id) {
 				sl.editCard(data);
@@ -46,7 +45,7 @@
 		sl.$onInit = function () {
 			storageService.subscribeToStoriesUpdates();
 		};
-		
+
 		sl.editList = function () {
 			sl.board.editList(sl.list);
 		}
@@ -55,6 +54,7 @@
 			sl.board.deleteList(sl.list);
 
 		}
+
 		sl.moveList = function (direction) {
 			var thisIndex = sl.board.lists.indexOf(sl.list);
 			var otherIndex = thisIndex + direction;
@@ -68,8 +68,9 @@
 				storageService.saveList(sl.list);
 			}
 		}
+
 		sl.addCard = function () {
-			
+
 			var modalInstance = $uibModal.open({
 				templateUrl: 'storyCardModal.html',
 				controller: 'cardModalController',
@@ -103,9 +104,9 @@
 				}
 			);
 		}
-		
+
 		sl.editCard = function (card) {
-			
+
 			var modalInstance = $uibModal.open({
 				templateUrl: 'storyCardModal.html',
 				controller: 'cardModalController',
@@ -115,7 +116,7 @@
 						return angular.copy(card);
 					},
 					lists: function () {
-						return sl.lists;
+						return sl.board.lists;
 					}
 				}
 			});
@@ -144,7 +145,7 @@
 
 		var cm = this;
 
-		cm.isEdit = card ? true : false;		
+		cm.isEdit = card ? true : false;
 		cm.lists = lists;
 		cm.card = card || {
 			summary: '',
