@@ -7,7 +7,8 @@
 		controller: storyListController,
 		controllerAs: 'sl',
 		bindings: {
-			list: '<'
+			list: '<',
+			lists: '<'
 		},
 		require: {
 			board: '^storyBoard'
@@ -17,7 +18,7 @@
 	app.controller('cardModalController', cardModalController);
 	
 	storyListController.$inject = ['$scope', '$uibModal', 'storageService', 'guidService', '$timeout'];
-	cardModalController.$inject = ['$uibModalInstance', 'card'];
+	cardModalController.$inject = ['$uibModalInstance', 'card', 'lists'];
 
 	function storyListController($scope, $uibModal, storageService, guidService, $timeout) {
 
@@ -99,6 +100,9 @@
 				resolve: {
 					card: function () {
 						return angular.copy(card);
+					},
+					lists: function () {
+						return sl.lists;
 					}
 				}
 			});
@@ -123,15 +127,17 @@
 		}
 	}
 
-	function cardModalController($uibModalInstance, card) {
+	function cardModalController($uibModalInstance, card, lists) {
 
 		var cm = this;
 
 		cm.isEdit = card ? true : false;		
+		cm.lists = lists;
 		cm.card = card || {
 			summary: '',
 			detail: ''
 		};
+
 
 		cm.ok = function () {
 			$uibModalInstance.close(cm.card);
@@ -139,6 +145,7 @@
 
 		cm.cancel = function () {
 			$uibModalInstance.dismiss('cancel');
+
 		};
 
 	}
