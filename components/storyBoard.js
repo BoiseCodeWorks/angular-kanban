@@ -27,7 +27,9 @@
 
 			$timeout(function () {
 				$scope.$apply(function () {
-					sb.lists = lists;
+					sb.lists = lists.sort(function (a, b) {
+						return a.order > b.order;
+					});
 				});
 			}, 100);
 			

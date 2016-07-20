@@ -53,8 +53,21 @@
 
 		sl.deleteList = function () {
 			sl.board.deleteList(sl.list);
-		}
 
+		}
+		sl.moveList = function (direction) {
+			var thisIndex = sl.board.lists.indexOf(sl.list);
+			var otherIndex = thisIndex + direction;
+
+			if (otherIndex > -1 && otherIndex < sl.board.lists.length) {
+				var otherList = sl.board.lists[otherIndex];
+				var otherOrder = otherList.order;
+				otherList.order = sl.list.order;
+				sl.list.order = otherOrder;
+				storageService.saveList(otherList);
+				storageService.saveList(sl.list);
+			}
+		}
 		sl.addCard = function () {
 			
 			var modalInstance = $uibModal.open({

@@ -43,7 +43,19 @@
 
 		function saveList(list) {
 
-			firebase.database().ref('/lists/' + list.id).set(list);			
+			firebase.database().ref('/lists/' + list.id).set(list);
+			firebase.database().ref('/stories').once('value', function (snapshot) {
+			
+				var stories = [];
+
+				snapshot.forEach(function (childSnapshot) {
+					
+					stories.push(childSnapshot.val());
+
+				});
+		
+				$rootScope.$broadcast('stories-updated', stories);
+			});
 		}		
 
 		function deleteList(list) {
