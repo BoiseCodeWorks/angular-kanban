@@ -74,6 +74,13 @@ textarea{
 
 .storyBoard {
   vertical-align: top;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.storyBoard * {
+  white-space: normal;
 }
 
 .storyList {
